@@ -23,5 +23,6 @@ const checkString = string => {
 };
 
 console.log(checkString("кекс"));
+console.log(checkString("радар"));
 
 
