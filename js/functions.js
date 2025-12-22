@@ -3,8 +3,8 @@
 
 const checksSringLength = (string, maxLength) => string.length <= maxLength;
 
-(checksSringLength ('проверяемая строка', 20));
-(checksSringLength ('проверяемая строка', 1));
+checksSringLength ('проверяемая строка', 20);
+checksSringLength ('проверяемая строка', 1);
 
 
 // Функция для проверки, является ли строка палиндромом
@@ -17,7 +17,7 @@ const checkString = (string) => {
   return string === reversed;
 };
 
-(checkString('кекс'));
-(checkString('радар'));
+checkString('кекс');
+checkString('радар');
 
 
