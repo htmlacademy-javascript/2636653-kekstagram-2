@@ -5,7 +5,9 @@ const MESSAGE = ['Всё отлично!', 'В целом всё неплохо.
 const NAMES = ['Сергей', 'Иван', 'Дмитрий', 'Роман', 'Александр', 'Виктория', 'Ольга', 'Светлана', 'Михаил', 'Анастасия', 'Валентина', 'Петр', 'Виктор',];
 const MIN_LIKES = 15;
 const MAX_LIKES = 200;
-const PHOTO_ARRAY = 25;
+const POSTS_COUNT = 25;
+const MIN_COMMENTS = 0;
+const MAX_COMMENTS = 30;
 
 const getRandomInteger = (a, b) => {
   const lower = Math.ceil(Math.min(a, b));
@@ -28,22 +30,37 @@ const getUniqueId = (() => {
 })();
 
 
-const createPhoto = () => {
-  const randomNameIndex = getRandomInteger(0, NAMES.length - 1);
+let commentIdCounter = 0;
+const getCommentId = () => ++commentIdCounter;
+
+const createComment = () => {
   const randomMessageIndex = getRandomInteger(0, MESSAGE.length - 1);
-  const id = getUniqueId();
+  const randomNameIndex = getRandomInteger(0, NAMES.length - 1);
   const avatarId = getRandomInteger(1, 6);
+
+  return {
+    id: getCommentId(),
+    avatar: `img/avatar-${ avatarId }.svg`,
+    message: MESSAGE[randomMessageIndex],
+    name: NAMES[randomNameIndex],
+  };
+};
+
+
+const createPhoto = () => {
+  const id = getUniqueId();
+  const commentId = getRandomInteger (MIN_COMMENTS, MAX_COMMENTS);
+  const similarComments = Array.from({length: commentId}, createComment);
 
   return {
     id: id,
     url: `photos/${ id }.jpg`,
-    message: MESSAGE[randomMessageIndex],
-    name: NAMES[randomNameIndex],
+    description: `Фотография №${ id }`,
     likes: getRandomInteger(MIN_LIKES, MAX_LIKES),
-    avatar: `img/avatar-${ avatarId }.svg`,
+    comments: similarComments,
   };
 };
 
-const similarPhotos = Array.from({length: PHOTO_ARRAY}, createPhoto);
-
-console.log(similarPhotos);
+const similarPhotos = Array.from({length: POSTS_COUNT}, createPhoto);
+console.log (similarPhotos);
+console.dir(similarPhotos, { depth: null });
