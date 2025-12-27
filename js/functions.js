@@ -1,20 +1,15 @@
 
 // Функция для проверки длины строки
 
-const checksSringLength = (string, maxLeight) => {
-  if (string.length <= maxLeight) {
-    return true;
-  }
-  return false;
-};
+const checksSringLength = (string, maxLength) => string.length <= maxLength;
 
-console.log(checksSringLength ('проверяемая строка', 20));
-console.log(checksSringLength ('проверяемая строка', 1));
+checksSringLength ('проверяемая строка', 20);
+checksSringLength ('проверяемая строка', 1);
 
 
 // Функция для проверки, является ли строка палиндромом
 
-const checkString = string => {
+const checkString = (string) => {
   let reversed = '';
   for (let i = string.length - 1; i >= 0; i--) {
     reversed += string[i];
@@ -22,7 +17,7 @@ const checkString = string => {
   return string === reversed;
 };
 
-console.log(checkString("кекс"));
-console.log(checkString("радар"));
+checkString('кекс');
+checkString('радар');
 
 
