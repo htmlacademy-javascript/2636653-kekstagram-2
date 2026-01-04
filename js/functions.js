@@ -21,3 +21,23 @@ checkString('кекс');
 checkString('радар');
 
 
+// Функция, которая определяет входит ли время встречи в рабочее время
+
+const workingDay = (startWorkingDay, endWorkingDay, startMeeting, meetingDurationMinutes) => {
+  const timeToMinutes = (time) => {
+    const parts = time.split(':');
+    const hours = Number(parts[0]);
+    const minutes = Number(parts[1]);
+    return hours * 60 + minutes;
+  };
+
+  const workStart = timeToMinutes(startWorkingDay);
+  const workEnd = timeToMinutes(endWorkingDay);
+  const meetingStart = timeToMinutes(startMeeting);
+  const meetingEnd = meetingStart + meetingDurationMinutes;
+
+  return meetingStart >= workStart && meetingEnd <= workEnd;
+};
+
+workingDay('7:30', '16:30', '16:00', 20);
+
