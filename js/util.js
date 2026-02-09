@@ -18,5 +18,5 @@ const getUniqueId = (() => {
   };
 })();
 
-export {getRandomInteger};
-export{getUniqueId};
+export {getRandomInteger, getUniqueId};
+

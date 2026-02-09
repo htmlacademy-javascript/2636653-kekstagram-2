@@ -37,4 +37,4 @@ const createPhoto = () => {
 
 const similarPhotos = Array.from({length: POSTS_COUNT}, createPhoto);
 
-export {similarPhotos};
+export {similarPhotos, createComments, createPhoto};
