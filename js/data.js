@@ -14,7 +14,6 @@ const createComments = (createPostCommentIdGenerator) => {
   };
 };
 
-
 const createPhoto = () => {
   const id = getUniqueId();
   const commentCount = getRandomInteger (MIN_COMMENTS, MAX_COMMENTS);
@@ -37,4 +36,4 @@ const createPhoto = () => {
 
 const similarPhotos = Array.from({length: POSTS_COUNT}, createPhoto);
 
-export {similarPhotos};
+export {similarPhotos, createComments, createPhoto};

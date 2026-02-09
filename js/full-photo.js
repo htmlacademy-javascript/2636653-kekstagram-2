@@ -32,11 +32,7 @@ function openBigPhoto(photo) {
   socialCommentCount.textContent = photo.comments.length;
   socialCaption.textContent = photo.description;
 
-
-
-
-
-  socialCommentsContainer.innerHTML = '';
+  // socialCommentsContainer.innerHTML = '';
 
   document.addEventListener('keydown', onDocumentKeydown);
 }

@@ -1,10 +1,14 @@
-import { MOCKED_PHOTOS } from './const.js';
-import { openBigPhoto } from './full-photo.js';
+import {openBigPhoto} from './full-photo.js';
 
 
 const template = document.querySelector('#picture').content.querySelector('.picture');
 const container = document.querySelector('.pictures');
+
+console.log(container);
+console.log(container?.classList);
+
 const fragment = document.createDocumentFragment();
+
 
 const createThumbnails = (photo) => {
   const thumbnails = template.cloneNode(true);
@@ -17,24 +21,24 @@ const createThumbnails = (photo) => {
   thumbnails.querySelector('.picture__likes').textContent = photo.likes;
 
   return thumbnails;
-
 };
 
-const posts = createThumbnails();
-posts.forEach((photo)=>{
-  const thumbnails = createThumbnails(photo);
-  fragment.appendChild(thumbnails);
-});
 
-container.appendChild(fragment);
+const renderThumbnails = (photos) => {
+
+  photos.forEach((photo) => {
+    const thumbnails = createThumbnails(photo);
+    fragment.appendChild(thumbnails);
+
+    thumbnails.addEventListener('click', (evt) => {
+      evt.preventDefault();
+      openBigPhoto(photo);
+    });
+  });
+
+  container.append(fragment);
+};
+
+export { renderThumbnails };
 
 
-// MOCKED_PHOTOS.forEach((photo)=>{
-//   const thumbnails = createThumbnails(photo);
-//   fragment.appendChild(thumbnails);
-
-//   thumbnails.addEventListener('click', (evt) => {
-//     evt.preventDefault();
-//     openBigPhoto(photo);
-//   });
-// });
