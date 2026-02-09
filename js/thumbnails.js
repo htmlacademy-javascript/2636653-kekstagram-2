@@ -1,5 +1,3 @@
-import { MOCKED_PHOTOS } from './const.js';
-
 const template = document.querySelector('#picture').content.querySelector('.picture');
 const container = document.querySelector('.pictures');
 const fragment = document.createDocumentFragment();
@@ -17,9 +15,13 @@ const createThumbnails = (photo) => {
   return thumbnails;
 };
 
-MOCKED_PHOTOS.forEach((photo)=>{
-  const thumbnails = createThumbnails(photo);
-  fragment.appendChild(thumbnails);
-});
 
-container.appendChild(fragment);
+const renderThumbnails = (photos) => {
+  photos.forEach((photo) => {
+    fragment.append(createThumbnails(photo));
+  });
+
+  container.append(fragment);
+};
+
+export { renderThumbnails };
