@@ -40,28 +40,12 @@ const initUploadForm = () => {
     errorTextClass: 'img-upload__field-wrapper--error',
   });
 
-  const submitButton = imgUploadForm.querySelector('.img-upload__submit');
-
-  const blockSubmitButton = () => {
-    submitButton.disabled = true;
-    submitButton.textContent = 'Отправка...';
-  };
-
-  const unblockSubmitButton = () => {
-    submitButton.disabled = false;
-    submitButton.textContent = 'Опубликовать';
-  };
-
-  imgUploadForm.addEventListener('submit', (evt) => {
-    evt.preventDefault();
-
+  imgUploadForm.addEventListener('submit', () => {
     const isValid = pristine.validate();
     if (isValid) {
       console.log('Можно отправлять');
-      blockSubmitButton();
     } else {
       console.log('Форма невалидна');
-      unblockSubmitButton();
     }
   });
 
@@ -131,6 +115,7 @@ const initUploadForm = () => {
     document.removeEventListener('keydown', onDocumentKeydown);
     imgUploadInput.value = '';
     imgUploadForm.reset();
+    pristine.reset();
   }
 
   imgUploadCancel.addEventListener('click', closeUploadForm);
