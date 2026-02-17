@@ -168,10 +168,10 @@ const initUploadForm = () => {
     const effect = EFFECTS[currentEffect];
 
     if (currentEffect === 'none') {
-      document.querySelector('.img-upload__effect-level').classList.add('hidden');
+      sliderElement.classList.add('hidden');
       imgUploadPreview.style.filter = 'none';
     } else {
-      document.querySelector('.img-upload__effect-level').classList.remove('hidden');
+      sliderElement.classList.remove('hidden');
       sliderElement.noUiSlider.updateOptions({
         range: {
           min: effect.min,
