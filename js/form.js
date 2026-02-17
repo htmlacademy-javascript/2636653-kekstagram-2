@@ -1,4 +1,5 @@
 import { isEscapeKey } from './util.js';
+import { EFFECTS } from './const.js';
 
 const initUploadForm = () => {
   const imgUploadForm = document.querySelector('.img-upload__form');
@@ -6,6 +7,9 @@ const initUploadForm = () => {
   const imgUploadOverlay = document.querySelector('.img-upload__overlay');
   const imgUploadCancel = document.querySelector('.img-upload__cancel');
   const body = document.querySelector('body');
+  const scaleControlSmaller = document.querySelector('.scale__control--smaller');
+  const scaleControlBigger = document.querySelector('.scale__control--bigger');
+  const scaleControlValue = document.querySelector('.scale__control--value');
 
 
   const onDocumentKeydown = (evt) => {
@@ -105,8 +109,80 @@ const initUploadForm = () => {
     validateComment,
     'Длина комментария больше 140 символов');
 
+  // масштаб картинки
 
-  // валидация формы конец
+  const imgUploadPreview = document.querySelector('.img-upload__preview img');
+  scaleControlSmaller.onclick = function() {
+    const currentValue = scaleControlValue.value;
+    let numericValue = parseInt(currentValue);
+
+    numericValue -= 25;
+    if (numericValue < 25) {
+      numericValue = 25;
+    }
+    scaleControlValue.value = `${numericValue}%`;
+    imgUploadPreview.style.transform = `scale(${numericValue / 100})`;
+  };
+
+  scaleControlBigger.onclick = function() {
+    const currentValue = scaleControlValue.value;
+    let numericValue = parseInt(currentValue);
+
+    numericValue += 25;
+    if (numericValue > 100) {
+      numericValue = 100;
+    }
+    scaleControlValue.value = `${numericValue}%`;
+    imgUploadPreview.style.transform = `scale(${numericValue / 100})`;
+  };
+
+  // слайдер
+
+  const sliderElement = document.querySelector('.img-upload__effect-level');
+  const effectValue = document.querySelector('.effect-level__value');
+  let currentEffect = 'none';
+  const effectsList = document.querySelector('.effects__list');
+
+  noUiSlider.create(sliderElement, {
+    range: {
+      min: 0,
+      max: 100,
+    },
+    start: 1,
+    step: 1,
+    connect: 'lower',
+  });
+
+  sliderElement.noUiSlider.on('update', () => {
+    const value = sliderElement.noUiSlider.get();
+    effectValue.value = value;
+
+    if (currentEffect !== 'none') {
+      const effect = EFFECTS[currentEffect];
+      imgUploadPreview.style.filter = `${effect.filter}(${value}${effect.unit})`;
+    }
+  });
+
+  effectsList.addEventListener('change', (evt) => {
+    currentEffect = evt.target.value;
+    const effect = EFFECTS[currentEffect];
+
+    if (currentEffect === 'none') {
+      document.querySelector('.img-upload__effect-level').classList.add('hidden');
+      imgUploadPreview.style.filter = 'none';
+    } else {
+      document.querySelector('.img-upload__effect-level').classList.remove('hidden');
+      sliderElement.noUiSlider.updateOptions({
+        range: {
+          min: effect.min,
+          max: effect.max
+        },
+        step: effect.step,
+        start: effect.max
+      });
+    }
+  });
+
 
   function closeUploadForm () {
     imgUploadOverlay.classList.add('hidden');
