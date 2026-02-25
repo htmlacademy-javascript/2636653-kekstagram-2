@@ -1,5 +1,70 @@
 import { isEscapeKey } from './util.js';
 import { EFFECTS } from './const.js';
+import { sendData } from './api.js';
+
+
+// Вынесите функции показа сообщений на верхний уровень
+const showSuccessMessage = () => {
+  const template = document.querySelector('#success').content;
+  const successElement = template.cloneNode(true);
+  document.body.append(successElement);
+
+  const successMessage = document.querySelector('.success');
+  const successButton = successMessage.querySelector('.success__button');
+
+  const closeSuccess = () => {
+    successMessage.remove();
+    document.removeEventListener('keydown', onEscKeydown);
+    document.removeEventListener('click', onOutsideClick);
+  };
+
+  const onEscKeydown = (evt) => {
+    if (evt.key === 'Escape') {
+      closeSuccess();
+    }
+  };
+
+  const onOutsideClick = (evt) => {
+    if (!evt.target.closest('.success__inner')) {
+      closeSuccess();
+    }
+  };
+
+  successButton.addEventListener('click', closeSuccess);
+  document.addEventListener('keydown', onEscKeydown);
+  document.addEventListener('click', onOutsideClick);
+};
+
+const showErrorMessage = () => {
+  const template = document.querySelector('#error').content;
+  const errorElement = template.cloneNode(true);
+  document.body.append(errorElement);
+
+  const errorMessage = document.querySelector('.error');
+  const errorButton = errorMessage.querySelector('.error__button');
+
+  const closeError = () => {
+    errorMessage.remove();
+    document.removeEventListener('keydown', onEscKeydown);
+    document.removeEventListener('click', onOutsideClick);
+  };
+
+  const onEscKeydown = (evt) => {
+    if (evt.key === 'Escape') {
+      closeError();
+    }
+  };
+
+  const onOutsideClick = (evt) => {
+    if (!evt.target.closest('.error__inner')) {
+      closeError();
+    }
+  };
+
+  errorButton.addEventListener('click', closeError);
+  document.addEventListener('keydown', onEscKeydown);
+  document.addEventListener('click', onOutsideClick);
+};
 
 const initUploadForm = () => {
   const imgUploadForm = document.querySelector('.img-upload__form');
@@ -38,7 +103,7 @@ const initUploadForm = () => {
 
   imgUploadInput.addEventListener('change', openUploadForm);
 
-  // валидация формы начало
+  // валидация формы
   const HASHTAG = /^#[a-zа-яё0-9]{1,19}$/i;
   const hashtagsField = imgUploadForm.querySelector('.text__hashtags');
 
@@ -48,13 +113,32 @@ const initUploadForm = () => {
     errorTextClass: 'img-upload__field-wrapper--error',
   });
 
-  imgUploadForm.addEventListener('submit', () => {
+
+  const submitButton = imgUploadForm.querySelector('.img-upload__submit');
+
+  imgUploadForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+
     const isValid = pristine.validate();
-    if (isValid) {
-      console.log('Можно отправлять');
-    } else {
-      console.log('Форма невалидна');
+    if (!isValid) {
+      return;
     }
+
+    submitButton.disabled = true;
+
+    const formData = new FormData(imgUploadForm);
+
+    sendData(formData)
+      .then(() => {
+        closeUploadForm();
+        showSuccessMessage();
+      })
+      .catch(() => {
+        showErrorMessage();
+      })
+      .finally(() => {
+        submitButton.disabled = false;
+      });
   });
 
   const validateHashtagsCount = (value) => {
@@ -186,13 +270,30 @@ const initUploadForm = () => {
   function closeUploadForm () {
     imgUploadOverlay.classList.add('hidden');
     body.classList.remove('modal-open');
-
     document.removeEventListener('keydown', onDocumentKeydown);
-    imgUploadInput.value = '';
+
+
+    // Сброс формы
     imgUploadForm.reset();
     pristine.reset();
+
+    // Сброс масштаба
+    scaleControlValue.value = '100%';
+    imgUploadPreview.style.transform = 'scale(1)';
+
+    // Сброс эффекта
+    currentEffect = 'none';
     imgUploadPreview.style.filter = 'none';
-    imgUploadPreview.style.transform = 'none';
+    sliderElement.classList.add('hidden');
+
+    // Сброс слайдера
+    sliderElement.noUiSlider.updateOptions({
+      range: { min: 0, max: 100 },
+      start: 100,
+      step: 1
+    });
+
+    imgUploadInput.value = '';
   }
 
   imgUploadCancel.addEventListener('click', closeUploadForm);
