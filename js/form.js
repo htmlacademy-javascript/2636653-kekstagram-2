@@ -82,6 +82,9 @@ const initUploadForm = () => {
 
   const onDocumentKeydown = (evt) => {
     if (isEscapeKey(evt)) {
+      if (document.querySelector('.error') || document.querySelector('.success')) {
+        return;
+      }
       const activeElement = document.activeElement;
       if (
         activeElement.classList.contains('text__hashtags') ||
@@ -98,18 +101,13 @@ const initUploadForm = () => {
   const onFileInputChange = (evt) => {
     const file = evt.target.files[0];
     if (file) {
-      const reader = new FileReader();
+      const currentImageUrl = URL.createObjectURL(file);
+      imgUploadPreview.src = currentImageUrl;
 
-      reader.addEventListener('load', () => {
-        imgUploadPreview.src = reader.result;
-
-        // Обновляем превью для всех эффектов
-        effectsPreview.forEach((preview) => {
-          preview.style.backgroundImage = `url('${reader.result}')`;
-        });
+      // Обновляем превью для всех эффектов
+      effectsPreview.forEach((preview) => {
+        preview.style.backgroundImage = `url('${currentImageUrl}')`;
       });
-
-      reader.readAsDataURL(file);
     }
     openUploadForm();
   };
@@ -264,17 +262,17 @@ const initUploadForm = () => {
     }
   });
 
- effectsList.addEventListener('change', (evt) => {
+  effectsList.addEventListener('change', (evt) => {
     currentEffect = evt.target.value;
     const effect = EFFECTS[currentEffect];
     const effectLevelContainer = document.querySelector('.img-upload__effect-level');
 
     if (currentEffect === 'none') {
       sliderElement.classList.add('hidden');
-      effectLevelContainer.classList.add('hidden');
+      effectLevelContainer.style.display = 'none';
       imgUploadPreview.style.filter = 'none';
     } else {
-      effectLevelContainer.classList.remove('hidden');
+      effectLevelContainer.style.display = '';
       sliderElement.classList.remove('hidden');
       sliderElement.noUiSlider.updateOptions({
         range: {

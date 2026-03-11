@@ -2,7 +2,7 @@ import { openBigPhoto } from './full-photo.js';
 
 const template = document.querySelector('#picture').content.querySelector('.picture');
 const container = document.querySelector('.pictures');
-let currentPhotos = [];
+
 
 const createThumbnails = (photo) => {
   const thumbnails = template.cloneNode(true);
@@ -31,7 +31,6 @@ const renderThumbnails = (photos, isReplace = false) => {
     clearThumbnails();
   }
 
-  currentPhotos = photos;
   const fragment = document.createDocumentFragment();
 
   photos.forEach((photo) => {
