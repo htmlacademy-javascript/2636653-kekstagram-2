@@ -40,6 +40,7 @@ export const EFFECTS = {
     step: 0.1,
     unit: 'px'
   },
+
   heat: {
     filter: 'brightness',
     min: 1,
