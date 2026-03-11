@@ -35,7 +35,7 @@ const createComment = (comment) => {
     <img
       class="social__picture"
       src="${comment.avatar}"
-      alt="Аватар ${comment.name}"
+      alt="${comment.name}"
       width="35"
       height="35"
     >

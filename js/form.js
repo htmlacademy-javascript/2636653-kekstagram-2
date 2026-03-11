@@ -2,6 +2,7 @@ import { isEscapeKey } from './util.js';
 import { EFFECTS } from './const.js';
 import { sendData } from './api.js';
 
+
 const showSuccessMessage = () => {
   const template = document.querySelector('#success').content;
   const successElement = template.cloneNode(true);
@@ -10,23 +11,23 @@ const showSuccessMessage = () => {
   const successMessage = document.querySelector('.success');
   const successButton = successMessage.querySelector('.success__button');
 
-  const closeSuccess = () => {
-    successMessage.remove();
-    document.removeEventListener('keydown', onEscKeydown);
-    document.removeEventListener('click', onOutsideClick);
-  };
-
-  const onEscKeydown = (evt) => {
+  function onEscKeydown(evt) {
     if (evt.key === 'Escape') {
       closeSuccess();
     }
-  };
+  }
 
-  const onOutsideClick = (evt) => {
+  function onOutsideClick(evt) {
     if (!evt.target.closest('.success__inner')) {
       closeSuccess();
     }
-  };
+  }
+
+  function closeSuccess() {
+    successMessage.remove();
+    document.removeEventListener('keydown', onEscKeydown);
+    document.removeEventListener('click', onOutsideClick);
+  }
 
   successButton.addEventListener('click', closeSuccess);
   document.addEventListener('keydown', onEscKeydown);
@@ -41,23 +42,23 @@ const showErrorMessage = () => {
   const errorMessage = document.querySelector('.error');
   const errorButton = errorMessage.querySelector('.error__button');
 
-  const closeError = () => {
-    errorMessage.remove();
-    document.removeEventListener('keydown', onEscKeydown);
-    document.removeEventListener('click', onOutsideClick);
-  };
-
-  const onEscKeydown = (evt) => {
+  function onEscKeydown(evt) {
     if (evt.key === 'Escape') {
       closeError();
     }
-  };
+  }
 
-  const onOutsideClick = (evt) => {
+  function onOutsideClick(evt) {
     if (!evt.target.closest('.error__inner')) {
       closeError();
     }
-  };
+  }
+
+  function closeError() {
+    errorMessage.remove();
+    document.removeEventListener('keydown', onEscKeydown);
+    document.removeEventListener('click', onOutsideClick);
+  }
 
   errorButton.addEventListener('click', closeError);
   document.addEventListener('keydown', onEscKeydown);
@@ -82,6 +83,9 @@ const initUploadForm = () => {
 
   const onDocumentKeydown = (evt) => {
     if (isEscapeKey(evt)) {
+      if (document.querySelector('.error') || document.querySelector('.success')) {
+        return;
+      }
       const activeElement = document.activeElement;
       if (
         activeElement.classList.contains('text__hashtags') ||
@@ -98,18 +102,13 @@ const initUploadForm = () => {
   const onFileInputChange = (evt) => {
     const file = evt.target.files[0];
     if (file) {
-      const reader = new FileReader();
+      const currentImageUrl = URL.createObjectURL(file);
+      imgUploadPreview.src = currentImageUrl;
 
-      reader.addEventListener('load', () => {
-        imgUploadPreview.src = reader.result;
-
-        // Обновляем превью для всех эффектов
-        effectsPreview.forEach((preview) => {
-          preview.style.backgroundImage = `url('${reader.result}')`;
-        });
+      // Обновляем превью для всех эффектов
+      effectsPreview.forEach((preview) => {
+        preview.style.backgroundImage = `url('${currentImageUrl}')`;
       });
-
-      reader.readAsDataURL(file);
     }
     openUploadForm();
   };
@@ -220,7 +219,7 @@ const initUploadForm = () => {
   // масштаб картинки
   scaleControlSmaller.onclick = function() {
     const currentValue = scaleControlValue.value;
-    let numericValue = parseInt(currentValue);
+    let numericValue = parseInt(currentValue,10);
 
     numericValue -= 25;
     if (numericValue < 25) {
@@ -232,7 +231,7 @@ const initUploadForm = () => {
 
   scaleControlBigger.onclick = function() {
     const currentValue = scaleControlValue.value;
-    let numericValue = parseInt(currentValue);
+    let numericValue = parseInt(currentValue,10);
 
     numericValue += 25;
     if (numericValue > 100) {
@@ -255,7 +254,8 @@ const initUploadForm = () => {
 
   sliderElement.noUiSlider.on('update', () => {
     const value = sliderElement.noUiSlider.get();
-    effectValue.value = value;
+    const roundedValue = Math.round(value * 10) / 10;
+    effectValue.value = roundedValue;
 
     if (currentEffect !== 'none') {
       const effect = EFFECTS[currentEffect];
@@ -266,11 +266,14 @@ const initUploadForm = () => {
   effectsList.addEventListener('change', (evt) => {
     currentEffect = evt.target.value;
     const effect = EFFECTS[currentEffect];
+    const effectLevelContainer = document.querySelector('.img-upload__effect-level');
 
     if (currentEffect === 'none') {
       sliderElement.classList.add('hidden');
+      effectLevelContainer.style.display = 'none';
       imgUploadPreview.style.filter = 'none';
     } else {
+      effectLevelContainer.style.display = '';
       sliderElement.classList.remove('hidden');
       sliderElement.noUiSlider.updateOptions({
         range: {

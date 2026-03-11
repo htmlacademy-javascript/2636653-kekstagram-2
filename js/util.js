@@ -5,20 +5,7 @@ const getRandomInteger = (a, b) => {
   return Math.floor(result);
 };
 
-const getUniqueId = (() => {
-  const used = [];
-  return () => {
-    let num;
-    num = getRandomInteger(1, 25);
-    while (used.includes(num)) {
-      num = getRandomInteger(1, 25);
-    }
-    used.push(num);
-    return num;
-  };
-})();
-
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-export {getRandomInteger,getUniqueId, isEscapeKey};
+export {getRandomInteger, isEscapeKey};
 

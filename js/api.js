@@ -1,5 +1,5 @@
-const BASE_URL = 'https://31.javascript.htmlacademy.pro/kekstagram/data';
-
+const BASE_URL = 'https://31.javascript.htmlacademy.pro/kekstagram/data/';
+const POST_URL = 'https://31.javascript.htmlacademy.pro/kekstagram/';
 const getData = () =>
   fetch(BASE_URL)
     .then((response) => {
@@ -10,7 +10,7 @@ const getData = () =>
     });
 
 
-const sendData = (formData) => fetch(BASE_URL, {
+const sendData = (formData) => fetch(POST_URL, {
   method: 'POST',
   body: formData,
 })
@@ -21,4 +21,4 @@ const sendData = (formData) => fetch(BASE_URL, {
     return response.json();
   });
 
-export { getData,sendData };
+export { getData, sendData };
