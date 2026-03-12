@@ -2,7 +2,6 @@ import { isEscapeKey } from './util.js';
 import { EFFECTS } from './const.js';
 import { sendData } from './api.js';
 
-
 const showSuccessMessage = () => {
   const template = document.querySelector('#success').content;
   const successElement = template.cloneNode(true);
