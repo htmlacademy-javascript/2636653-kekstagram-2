@@ -7,6 +7,7 @@ const showSuccessMessage = () => {
   const successElement = template.cloneNode(true);
   document.body.append(successElement);
 
+
   const successMessage = document.querySelector('.success');
   const successButton = successMessage.querySelector('.success__button');
 
