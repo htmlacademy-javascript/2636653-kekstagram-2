@@ -16,6 +16,7 @@ getData()
     const imgFilters = document.querySelector('.img-filters');
     imgFilters.classList.remove('img-filters--inactive');
   })
+
   .catch(() => {
     const dataErrorTemplate = document.querySelector('#data-error').content;
     const errorElement = dataErrorTemplate.cloneNode(true).firstElementChild;
