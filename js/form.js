@@ -128,7 +128,6 @@ const initUploadForm = () => {
     body.classList.add('modal-open');
     document.addEventListener('keydown', onDocumentKeydown);
     sliderElement.classList.add('hidden');
-    const effectLevelContainer = document.querySelector('.img-upload__effect-level');
     effectLevelContainer.style.display = 'none';
   }
 
